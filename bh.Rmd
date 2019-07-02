@@ -1,0 +1,920 @@
+---
+title: "practicum"
+author: "Jackson Ayieko"
+date: "May 16, 2019"
+output: html_document
+---
+
+The initial step of this assignment was to load the data into R as below
+```{r}
+behavior_factors <- read.csv("Behavioral_Risk.csv", header = T)
+View(behavior_factors)
+```
+
+After loading the data set set, I realized there are many behavioral factors that are covered and the data file is really large, I decided to select 5 behavioral factors to focus on. These include COPD,cardiovascular diseases, kidney, depression, and binge drinking. Here are the steps used to select the target behavior factors.
+```{r}
+library(dplyr)
+library(stringr)
+library(tidyr)
+library(ggplot2)
+
+tb1 <- filter(behavior_factors, Topic =="COPD")
+tb2 <- filter(behavior_factors, Topic =="Kidney")
+tb3 <- filter(behavior_factors, Topic =="Depression")
+tb4 <- filter(behavior_factors, Topic =="Binge Drinking")
+tb5 <- filter(behavior_factors, Topic =="Cardiovascular Disease")
+target_behaviors <- rbind(tb1,tb2,tb3, tb4, tb5)
+View(target_behaviors)
+```
+
+Now that I have the target data set, am focusing on getting to understand the data set well. The first step was to clean up the data set and remove unwanted columns that may not be relevant for analysis. Here are the steps used:
+
+
+selecting the target columns from the data set
+```{r}
+#target column
+targ_b <- select(target_behaviors, Year:Response, Sample_Size, Geolocation)
+targ_b$Locationdesc <- as.character(targ_b$Locationdesc)
+targ_b$Geolocation <- gsub(",",":", targ_b$Geolocation)
+targ_b <- targ_b %>% separate(Geolocation, c('Lat', 'Lon'), sep = ":")
+View(targ_b)
+str(targ_b)
+# getting copd data 2011
+targ_copd <- filter(targ_b, Year == "2011", Response == "Yes", Topic == "COPD")
+View(targ_copd)
+```
+For my analysis am focusing on top five and bottom five for each of the five topics (copd, depression, binge drinking, depression and cardiovascular diseases). Am going to compare each and see which state have the highest cases or the lowest cases of each. Am planning to use bar plots as my visualization tool for easy comparison. Here are the steps used:
+
+plotting top 5 based on sample size for 2011
+
+```{r}
+top_n(targ_copd, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+In 2011 the state of Massachussetts had the highest number of COPD cases followed by Kansas.
+
+bottom 5 COPD states 
+```{r}
+top_n(targ_copd, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+The state of Guam had the lowest cases of COPd in 2011.
+COPD data top 5 for  2012
+```{r}
+targ_copd2 <- filter(targ_b, Year == "2012", Response == "Yes", Topic == "COPD")
+View(targ_copd2)
+# plotting top 5 based on sample size for 2012
+
+top_n(targ_copd2, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2012 Masschusetts still recorded the highest number of COPD, followed by Pennslyvania.
+
+COPD data bottom 5 for 2012
+```{r}
+# plotting the bottom 5 COPD for 2012
+top_n(targ_copd2, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+ Guam still recorded the lowest cases of COPD at 81.
+COPD data top 5 for  2013
+```{r}
+targ_copd3 <- filter(targ_b, Year == "2013", Response == "Yes", Topic == "COPD")
+View(targ_copd3)
+# plotting top 5 based on sample size for 2013
+
+top_n(targ_copd3, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+COPD data bottom 5 for 2013
+```{r}
+# plotting the bottom 5 COPD for 2013
+top_n(targ_copd3, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+ In 2013, Florida had th highest cases of COPD while Guam still had the lowest numbers. 
+ 
+COPD data top 5 for  2014
+```{r}
+targ_copd4 <- filter(targ_b, Year == "2014", Response == "Yes", Topic == "COPD")
+View(targ_copd4)
+# plotting top 5 based on sample size for 2013
+
+top_n(targ_copd4, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+COPD data bottom 5 for 2014
+```{r}
+# plotting the bottom 5 COPD for 2014
+top_n(targ_copd4, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+COPD data top 5 for  2015
+```{r}
+targ_copd5 <- filter(targ_b, Year == "2015", Response == "Yes", Topic == "COPD")
+View(targ_copd5)
+# plotting top 5 based on sample size for 2013
+
+top_n(targ_copd5, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2014,Kentacky had the highest number of COPD while Guam still recorded the lowest cases of COPD. 
+
+COPD data bottom 5 for 2015
+```{r}
+# plotting the bottom 5 COPD for 2015
+top_n(targ_copd5, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+COPD data top 5 for  2016
+```{r}
+targ_copd6 <- filter(targ_b, Year == "2016", Response == "Yes", Topic == "COPD")
+View(targ_copd6)
+# plotting top 5 based on sample size for 2016
+
+top_n(targ_copd5, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+COPD data bottom 5 for 2016
+```{r}
+# plotting the bottom 5 COPD for 2016
+top_n(targ_copd6, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2016, Kansas hard the highest number of COPD while Virgin Islands had the lowest cases of COPD. 
+
+**COPD data top 5 for  2017**
+```{r}
+targ_copd7 <- filter(targ_b, Year == "2017", Response == "Yes", Topic == "COPD")
+View(targ_copd7)
+# plotting top 5 based on sample size for 2017
+
+top_n(targ_copd7, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+COPD data bottom 5 for 2017
+```{r}
+# plotting the bottom 5 COPD for 2017
+top_n(targ_copd7, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing COPD in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2017 Florida had the most cases of COPD while GUAM had the lowest cases.
+
+The next topic I covered is the Kidney diseases in the USA. I first started by selecting the section of the data set of interest.
+
+```{r}
+# getting kidney data 2011
+targ_kid <- filter(targ_b, Year == "2011", Response == "Yes", Topic == "Kidney")
+View(targ_kid)
+```
+
+With the data selected, the next tep was to get the top 5 and bottom 5 states based on the kidney data. Here are the steps used:
+
+```{r}
+# top 5 states with kidney disease 2011
+top_n(targ_kid, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+```{r}
+# plotting the bottom 5 states with kidney disease for 2011
+top_n(targ_kid, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+The second condition I covered was kidney disease. In 2011, Nebraska had the most cases while Guam had the lowest cases of Kidey disease.
+
+2012 kidney disease data
+```{r}
+# getting kidney data 2012
+targ_kid2 <- filter(targ_b, Year == "2012", Response == "Yes", Topic == "Kidney")
+View(targ_kid2)
+```
+
+getting the top 5 states with kidney disease 2012
+
+```{r}
+# top 5 states with kidney disease 2012
+top_n(targ_kid2, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+getting bottom 5 states kidney disease 2012
+
+```{r}
+# plotting the bottom 5 states with kidney disease for 2012
+top_n(targ_kid2, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2012 the cases remained the same with Nebraska still having the highest case while Guam had the least number of Kidney disease cases. 
+
+**2013 kidney disease data**
+```{r}
+# getting kidney data 2013
+targ_kid3 <- filter(targ_b, Year == "2013", Response == "Yes", Topic == "Kidney")
+View(targ_kid3)
+```
+
+**getting the top 5 states with kidney disease 2013**
+
+```{r}
+# top 5 states with kidney disease 2013
+top_n(targ_kid3, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states kidney disease 2013**
+```{r}
+# plotting the bottom 5 states with kidney disease for 2013
+top_n(targ_kid3, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2013, FLorida had the highest number of Kidney diseases cases while Guam had the smallest number of cases.
+
+**2014 kidney disease data**
+```{r}
+# getting kidney data 2014
+targ_kid4 <- filter(targ_b, Year == "2014", Response == "Yes", Topic == "Kidney")
+View(targ_kid4)
+```
+
+**getting the top 5 states with kidney disease 2014**
+```{r}
+# top 5 states with kidney disease 2014
+top_n(targ_kid4, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+getting bottom 5 states kidney disease 2014
+```{r}
+# plotting the bottom 5 states with kidney disease for 2014
+top_n(targ_kid4, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2014, Arizona topped the number of kidney diseases while Guam had th least number of cases recorded.
+
+**2015 kidney disease data**
+```{r}
+# getting kidney data 2015
+targ_kid5 <- filter(targ_b, Year == "2015", Response == "Yes", Topic == "Kidney")
+View(targ_kid5)
+```
+**getting the top 5 states with kidney disease 2015**
+```{r}
+# top 5 states with kidney disease 2015
+top_n(targ_kid5, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states kidney disease 2015**
+```{r}
+# plotting the bottom 5 states with kidney disease for 2015
+top_n(targ_kid5, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2015, Kansas had the highest number of kidney disease cases while Guam had the lowest number of cases. 
+
+**2016 kidney disease data**
+```{r}
+# getting kidney data 2016
+targ_kid6 <- filter(targ_b, Year == "2016", Response == "Yes", Topic == "Kidney")
+View(targ_kid6)
+```
+
+**getting the top 5 states with kidney disease 2016**
+
+```{r}
+# top 5 states with kidney disease 2016
+top_n(targ_kid6, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**getting bottom 5 states kidney disease 2016**
+
+```{r}
+# plotting the bottom 5 states with kidney disease for 2016
+top_n(targ_kid6, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2016 FLorida had th highest cases of kidney disease whil Virgin Islands had the lowest cases. 
+
+**2017 kidney disease data**
+
+```{r}
+# getting kidney data 2017
+targ_kid7 <- filter(targ_b, Year == "2017", Response == "Yes", Topic == "Kidney")
+View(targ_kid7)
+```
+
+**getting the top 5 states with kidney disease 2017**
+
+```{r}
+# top 5 states with kidney disease 2017
+top_n(targ_kid7, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in Top 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**getting bottom 5 states kidney disease 2017**
+
+```{r}
+# plotting the bottom 5 states with kidney disease for 2017
+top_n(targ_kid7, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Kidney Disease in bottom 5 State", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2017 Florida was still leading in kidney diseases cases while Guam was the lowest. 
+
+The next condition i looked at was binge drinking. This is a this is considered as men having at least 5 alcoholic drinks everyday. In this case am going to evaluate the top 5 and bottom 5 states where patients answered yes to binge drinking. First I obtained the relevant portion of the data set.
+
+**2011 binge drinking disease data**
+
+```{r}
+# getting binge drinking data 2011
+targ_binge <- filter(targ_b, Year == "2011", Response == "Yes", Topic == "Binge Drinking")
+View(targ_binge)
+```
+
+**getting the top 5 states with binge drinking 2011**
+
+```{r}
+# top 5 states with binge drinking 2011
+top_n(targ_binge, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2011**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2011
+top_n(targ_binge, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2011, Nebraska had the highest number of recorded cases of Binge drinking while Guam had the least cases of binge drinking. 
+
+**2012 binge drinking disease data**
+
+```{r}
+# getting binge drinking data 2012
+targ_binge2 <- filter(targ_b, Year == "2012", Response == "Yes", Topic == "Binge Drinking")
+View(targ_binge2)
+```
+
+**getting the top 5 states with binge drinking 2012**
+
+```{r}
+# top 5 states with binge drinking 2012
+top_n(targ_binge2, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2012**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2012
+top_n(targ_binge2, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2012 Massachusetts had the highest cases of binge drinking while Guam recorded the lowest number.
+
+**2013 binge drinking disease data**
+
+```{r}
+# getting binge drinking data 2013
+targ_binge3 <- filter(targ_b, Year == "2013", Response == "Yes", Topic == "Binge Drinking")
+View(targ_binge3)
+```
+
+**getting the top 5 states with binge drinking 2013**
+
+```{r}
+# top 5 states with binge drinking 2013
+top_n(targ_binge3, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2013**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2013
+top_n(targ_binge3, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+In 2013, Floring led the binge drinking category while Guam was last.
+
+**2014 binge drinking disease data**
+
+```{r}
+# getting binge drinking data 2014
+targ_binge4 <- filter(targ_b, Year == "2014", Response == "Yes", Topic == "Binge Drinking")
+View(targ_binge4)
+```
+
+**getting the top 5 states with binge drinking 2014**
+
+```{r}
+# top 5 states with binge drinking 2014
+top_n(targ_binge4, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2014**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2014
+top_n(targ_binge4, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2014, Nebraska led the chart in Binge drinking while Tennesee was last.
+**2015 binge drinking disease data**
+
+```{r}
+# getting binge drinking data 2015
+targ_binge5 <- filter(targ_b, Year == "2015", Response == "Yes", Topic == "Binge Drinking")
+View(targ_binge5)
+```
+
+**getting the top 5 states with binge drinking 2015**
+
+```{r}
+# top 5 states with binge drinking 2015
+top_n(targ_binge5, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**getting bottom 5 states binge drinking 2015**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2015
+top_n(targ_binge5, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+In 2015 Minnesota was the highest in binge drinking while Guam was last.
+
+**2016 binge drinking disease data**
+
+```{r}
+# getting binge drinking data 2016
+targ_binge6 <- filter(targ_b, Year == "2016", Response == "Yes", Topic == "Binge Drinking")
+View(targ_binge6)
+```
+
+**getting the top 5 states with binge drinking 2016**
+
+```{r}
+# top 5 states with binge drinking 2016
+top_n(targ_binge6, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**getting bottom 5 states binge drinking 2016**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2016
+top_n(targ_binge6, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2016 New York had the highest number of binge drinkers while virgin Island had the least.
+
+**2017 binge drinking disease data**
+
+```{r}
+# getting binge drinking data 2017
+targ_binge7 <- filter(targ_b, Year == "2017", Response == "Yes", Topic == "Binge Drinking")
+View(targ_binge7)
+```
+
+**getting the top 5 states with binge drinking 2017**
+
+```{r}
+# top 5 states with binge drinking 2017
+top_n(targ_binge7, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2017**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2017
+top_n(targ_binge7, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Binge Drinking in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+In 2017 Kansas was leading and was followed by Guam. 
+
+
+The forth condition am covering is depression. Depression is a serious mental condition, and I chose to cover to see if geographical location could impact depression. My approach is still the same covering the top 5 and bottom 5 states in depression.
+
+**2011 depression data**
+
+```{r}
+# getting binge drinking data 2011
+targ_dep <- filter(targ_b, Year == "2011", Response == "Yes", Topic == "Depression")
+View(targ_dep)
+```
+
+**getting the top 5 states with depression 2011**
+
+```{r}
+# top 5 states with binge drinking 2011
+top_n(targ_dep, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**getting bottom 5 states binge drinking 2011**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2011
+top_n(targ_dep, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2011, Nebraska had the highest number of depression patients while GUam had the least. 
+
+**2012 depression data**
+
+```{r}
+# getting binge drinking data 2012
+targ_dep2 <- filter(targ_b, Year == "2012", Response == "Yes", Topic == "Depression")
+View(targ_dep2)
+```
+
+**getting the top 5 states with depression 2012**
+
+```{r}
+# top 5 states with binge drinking 2012
+top_n(targ_dep2, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**getting bottom 5 states binge drinking 2012**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2012
+top_n(targ_dep2, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+In 2012 Massachusetts had the highest number while Guam had the least.
+
+**2013 depression data**
+
+```{r}
+# getting binge drinking data 2013
+targ_dep3 <- filter(targ_b, Year == "2013", Response == "Yes", Topic == "Depression")
+View(targ_dep3)
+```
+
+**getting the top 5 states with depression 2013**
+
+```{r}
+# top 5 states with binge drinking 2013
+top_n(targ_dep3, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2013**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2013
+top_n(targ_dep3, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+in 2013 Florida had the highest cases of depression while Guam had the least.
+
+**2014 depression data**
+
+```{r}
+# getting binge drinking data 2014
+targ_dep4 <- filter(targ_b, Year == "2014", Response == "Yes", Topic == "Depression")
+View(targ_dep4)
+```
+
+**getting the top 5 states with depression 2014**
+
+```{r}
+# top 5 states with binge drinking 2014
+top_n(targ_dep4, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2014**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2014
+top_n(targ_dep4, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2014 nebraska was leadin and last  was Guam.
+
+**2015 depression data**
+
+```{r}
+# getting binge drinking data 2015
+targ_dep5 <- filter(targ_b, Year == "2015", Response == "Yes", Topic == "Depression")
+View(targ_dep5)
+```
+
+**getting the top 5 states with depression 2015**
+
+```{r}
+# top 5 states with binge drinking 2015
+top_n(targ_dep5, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2015**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2015
+top_n(targ_dep5, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2015 Kansas had the highest cases of depression while GUam had the least.
+
+**2016 depression data**
+
+```{r}
+# getting binge drinking data 2016
+targ_dep6 <- filter(targ_b, Year == "2016", Response == "Yes", Topic == "Depression")
+View(targ_dep6)
+```
+
+**getting the top 5 states with depression 2016**
+
+```{r}
+# top 5 states with binge drinking 2016
+top_n(targ_dep6, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2016**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2016
+top_n(targ_dep6, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2016 Florida had the most cases of depression while Virgin Island had the least cases of depression. 
+
+**2017 depression data**
+
+```{r}
+# getting binge drinking data 2017
+targ_dep7 <- filter(targ_b, Year == "2017", Response == "Yes", Topic == "Depression")
+View(targ_dep7)
+```
+
+**getting the top 5 states with depression 2017**
+
+```{r}
+# top 5 states with binge drinking 2017
+top_n(targ_dep7, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states binge drinking 2017**
+
+```{r}
+# plotting the bottom 5 states with binge drinking for 2017
+top_n(targ_dep7, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Depression in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In 2017 Florida had most depression cases whiile Guam had the least.
+
+**2011 cardiovascular disease data**
+
+```{r}
+# getting cardiovascular data 2011
+targ_card <- filter(targ_b, Year == "2011", Response == "Yes", Topic == "Cardiovascular Disease")
+View(targ_card)
+```
+
+**getting the top 5 states with depression 2011**
+
+```{r}
+# top 5 states with cardiovascular 2011
+top_n(targ_card, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing cardiovascular disease in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states cardiovascluar 2011**
+
+```{r}
+# plotting the bottom 5 states with cardiovascular for 2011
+top_n(targ_card, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Cardiovascular disease in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**2012 cardiovascular disease data**
+
+```{r}
+# getting cardiovascular data 2012
+targ_card2 <- filter(targ_b, Year == "2012", Response == "Yes", Topic == "Cardiovascular Disease")
+View(targ_card2)
+```
+
+**getting the top 5 states with depression 2012**
+
+```{r}
+# top 5 states with cardiovascular 2012
+top_n(targ_card2, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing cardiovascular disease in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states cardiovascluar 2012**
+
+```{r}
+# plotting the bottom 5 states with cardiovascular for 2012
+top_n(targ_card2, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Cardiovascular disease in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**2013 cardiovascular disease data**
+
+```{r}
+# getting cardiovascular data 2013
+targ_card3 <- filter(targ_b, Year == "2013", Response == "Yes", Topic == "Cardiovascular Disease")
+View(targ_card3)
+```
+
+**getting the top 5 states with depression 2013**
+
+```{r}
+# top 5 states with cardiovascular 2013
+top_n(targ_card3, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing cardiovascular disease in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states cardiovascluar 2013**
+
+```{r}
+# plotting the bottom 5 states with cardiovascular for 2013
+top_n(targ_card3, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Cardiovascular disease in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**2014 cardiovascular disease data**
+
+```{r}
+# getting cardiovascular data 2014
+targ_card4 <- filter(targ_b, Year == "2014", Response == "Yes", Topic == "Cardiovascular Disease")
+View(targ_card4)
+```
+
+***getting the top 5 states with depression 2014**
+```{r}
+# top 5 states with cardiovascular 2014
+top_n(targ_card4, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing cardiovascular disease in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states cardiovascluar 2014**
+
+```{r}
+# plotting the bottom 5 states with cardiovascular for 2014
+top_n(targ_card4, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Cardiovascular disease in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**2015 cardiovascular disease data**
+
+```{r}
+# getting cardiovascular data 2015
+targ_card5 <- filter(targ_b, Year == "2015", Response == "Yes", Topic == "Cardiovascular Disease")
+View(targ_card5)
+```
+**getting the top 5 states with depression 2015**
+
+```{r}
+# top 5 states with cardiovascular 2015
+top_n(targ_card5, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing cardiovascular disease in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+
+**getting bottom 5 states cardiovascluar 2015**
+
+```{r}
+# plotting the bottom 5 states with cardiovascular for 2015
+top_n(targ_card5, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Cardiovascular disease in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**2016 cardiovascular disease data**
+
+```{r}
+# getting cardiovascular data 2016
+targ_card6 <- filter(targ_b, Year == "2016", Response == "Yes", Topic == "Cardiovascular Disease")
+View(targ_card6)
+```
+
+**getting the top 5 states with depression 2016**
+
+```{r}
+# top 5 states with cardiovascular 2016
+top_n(targ_card6, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing cardiovascular disease in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**getting bottom 5 states cardiovascluar 2016**
+
+```{r}
+# plotting the bottom 5 states with cardiovascular for 2016
+top_n(targ_card6, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Cardiovascular disease in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+**2017 cardiovascular disease data**
+
+```{r}
+# getting cardiovascular data 2017
+targ_card7 <- filter(targ_b, Year == "2017", Response == "Yes", Topic == "Cardiovascular Disease")
+View(targ_card7)
+```
+
+**getting the top 5 states with depression 2017**
+
+```{r}
+# top 5 states with cardiovascular 2017
+top_n(targ_card7, n=5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing cardiovascular disease in Top 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+**getting bottom 5 states cardiovascluar 2017**
+
+```{r}
+# plotting the bottom 5 states with cardiovascular for 2017
+top_n(targ_card7, n=-5, Sample_Size) %>%
+  ggplot(., aes(x=Locationdesc, y=Sample_Size))+ labs(title = "Comparing Cardiovascular disease in bottom 5 States", x = "State") +
+  geom_bar(stat = 'identity', fill = "tan")+ geom_text(aes(label=Sample_Size), vjust=1.5, color="black", size = 3.5)+ theme_minimal()
+```
+
+In Summary, the analysis was a success, the visual showed the occurence of various conditions in various state. A general assessment showed that Kansas, Florida and Massachusetts were leading in most categories in most year, while Guam and Virgin Islands were the last  most of the time. I believe the sample size used in this study was not to conclusivel say that it is a clear depiction of the entire country. I also felt like since the sample size was calcalted in actual numbers the results wasn't fair because some states have bigger popolation than others. A good example for this case would be Guam which is a small territory of the USa. It appeared in the bottom for most of the conditions because, it has a small population, hence, few people are being observed with the various conditions therefore making them appear to be safer of the covered medical conditions. 
